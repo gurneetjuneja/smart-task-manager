@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  auth-service:
+    build:
+      context: ./services/auth-service
+    ports:
+      - "4000:4000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/smart-task-manager
+      - JWT_SECRET=your-secret-key
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  task-service:
+    build:
+      context: ./services/task-service
+    ports:
+      - "4001:4001"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/smart-task-manager
+    depends_on:
+      - mongo
+
+volumes:
+  mongodb_data:
