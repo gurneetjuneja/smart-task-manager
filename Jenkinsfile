@@ -24,8 +24,11 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                echo 'Running unit tests (add test commands here if needed)...'
-                // If you have tests, add the appropriate commands to run tests here
+                script {
+                    // Run tests inside the container or locally if Jenkins agent has Node installed
+                    bat 'cd auth-service && npm install'
+                    bat 'cd auth-service && npm test'
+                }
             }
         }
 
