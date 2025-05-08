@@ -16,7 +16,8 @@ pipeline {
         stage('Build Services') {
             steps {
                 script {
-                    sh 'docker-compose build'
+                    // Make sure Docker Compose is installed and Docker daemon is running
+                    bat 'docker-compose build'
                 }
             }
         }
@@ -24,13 +25,15 @@ pipeline {
         stage('Run Tests') {
             steps {
                 echo 'Running unit tests (add test commands here if needed)...'
+                // If you have tests, add the appropriate commands to run tests here
             }
         }
 
         stage('Deploy Services') {
             steps {
                 script {
-                    sh 'docker-compose up -d'
+                    // Ensure Docker Compose is working and run services in detached mode
+                    bat 'docker-compose up -d'
                 }
             }
         }
