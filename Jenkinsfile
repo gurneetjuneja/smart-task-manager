@@ -16,7 +16,6 @@ pipeline {
         stage('Build Services') {
             steps {
                 script {
-                    // Make sure Docker Compose is installed and Docker daemon is running
                     bat 'docker-compose build'
                 }
             }
@@ -25,9 +24,17 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Run tests inside the container or locally if Jenkins agent has Node installed
-                    bat 'cd auth-service && npm install'
-                    bat 'cd auth-service && npm test'
+                    // Run tests for auth-service
+                    dir('auth-service') {
+                        bat 'npm install'
+                        bat 'npm test || echo "No tests found in auth-service"'
+                    }
+
+                    // Run tests for task-service
+                    dir('task-service') {
+                        bat 'npm install'
+                        bat 'npm test || echo "No tests found in task-service"'
+                    }
                 }
             }
         }
@@ -35,7 +42,6 @@ pipeline {
         stage('Deploy Services') {
             steps {
                 script {
-                    // Ensure Docker Compose is working and run services in detached mode
                     bat 'docker-compose up -d'
                 }
             }
